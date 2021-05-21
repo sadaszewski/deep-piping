@@ -1,0 +1,56 @@
+log_loss:
+  class: deep_piping.lightning.LogLoss
+
+log_scores:
+  class: deep_piping.lightning.LogScores
+  scores: [ "f1_score", "accuracy_score", "precision_score", "recall_score" ]
+
+forward:
+  class: deep_piping.lightning.Forward
+
+dl_model:
+  class: deep_piping.lightning.Classifier
+  num_classes: 2
+
+opt:
+  class: transformers.AdamW
+  0: dl_model.parameters()
+  lr: 0.001
+
+sched:
+  class: torch.optimizer.lr_scheduler.ReduceLROnPlateau
+  0: opt
+  patience: 2
+  threshold: 1.e-2
+  threshold_mode: "rel"
+  verbose: true
+
+dataset:
+  class: automl_nlp_2021.dataset.RonepFinalTraining23CatDataset
+
+model:
+  class: deep_piping.LitFlexibleModel
+  dataset: dataset
+  dl_model: dl_model
+  train_ins:
+    - forward
+    - log_loss
+  val_ins:
+    - forward
+    - log_loss
+    - log_scores
+  test_ins:
+    - forward
+    - log_loss
+    - log_scores
+  optimizer: opt
+  lr_scheduler:
+    scheduler: sched
+    monitor: "val_loss"
+
+logger:
+  class: pytorch_lightning.loggers.MLFlowLogger
+
+trainer:
+  class: pytorch_lightning.Trainer
+  logger: logger
