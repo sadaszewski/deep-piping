@@ -21,7 +21,7 @@ def create_object(objdef, container):
         cls = resolve_class(objdef['class'])
         args = {}
         kwargs = {}
-        for k, v in objdef['arguments'].items():
+        for k, v in objdef.items():
             if k == 'class':
                 continue
             if type(k) == int:
@@ -31,7 +31,7 @@ def create_object(objdef, container):
         args = [ args[i] for i in range(len(args)) ]
         return cls(*args, **kwargs)
     elif type(objdef) == dict:
-        return { k: create_object(v, contaienr) \
+        return { k: create_object(v, container) \
             for k, v in objdef.items() }
     else:
         return objdef

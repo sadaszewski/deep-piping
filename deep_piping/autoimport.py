@@ -4,7 +4,10 @@ import importlib
 
 def autoimport(expr, names):
     names = list(names)
-    t = ast.parse(expr)
+    try:
+        t = ast.parse(expr)
+    except SyntaxError:
+        raise SyntaxError('Syntax error in expression: %s' % expr)
     res = {}
     assert len(t.body) == 1
     for n in ast.walk(t):

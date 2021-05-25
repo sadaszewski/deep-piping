@@ -7,7 +7,7 @@ def load_config(fname):
     path, _ = os.path.split(os.path.abspath(fname))
     with open(fname, 'r') as f:
         config = yaml.round_trip_load(f, preserve_quotes=True)
-    config['path'] = os.path.abspath(fname)
+    # config['path'] = os.path.abspath(fname)
 
     if 'base' in config:
         res = {}
