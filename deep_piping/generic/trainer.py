@@ -1,5 +1,5 @@
 class GenericTrainer:
-    def __init__(self, dataset, label, logger, splitter, resampler, n_classes=None):
+    def __init__(self, dataset, label, logger, splitter, resampler=None, n_classes=None):
         self.dataset = dataset
         self.label = label
         self.logger = logger
@@ -21,8 +21,9 @@ class GenericTrainer:
             train_data = self.dataset.iloc[train_index]
             test_data = self.dataset.iloc[test_index]
 
-            train_data = self.resampler.fit_resample(train_data)
-            test_data = self.resampler.fit_resample(test_data)
+            if self.resampler is not None:
+                train_data = self.resampler.fit_resample(train_data)
+                test_data = self.resampler.fit_resample(test_data)
 
             model.train(train_data, context)
             model.test(test_data, context)
