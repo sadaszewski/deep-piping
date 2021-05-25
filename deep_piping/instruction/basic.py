@@ -1,4 +1,5 @@
 import sklearn.metrics
+import numpy as np
 
 
 class Instruction:
@@ -16,8 +17,15 @@ class Fit(Instruction):
 
 class Predict(Instruction):
     def __call__(self, context):
-        y_pred = context['ml_model'].predict(context['data'])
+        ml_model = context['ml_model']
+        y_pred = ml_model.predict(context['data'])
         context['y_pred'] = y_pred
+        if hasattr(ml_model, 'predict_proba'):
+            y_score = ml_model.predict_proba(context['data'])
+            # print('y_score:', y_score)
+            if len(y_score.shape) == 2 and context['n_classes'] == 2:
+                y_score = np.array(y_score)[:, 1]
+            context['y_score'] = y_score
 
 
 class ComputeScores(Instruction):
@@ -25,12 +33,14 @@ class ComputeScores(Instruction):
         self.scores = scores
 
     def __call__(self, context):
-        y_pred = context['y_pred']
         y_true = context['data'][context['label']]
         res = {}
         for snam in self.scores:
             s = getattr(sklearn.metrics, snam + '_score')
-            res[snam] = s(y_true, y_pred)
+            if snam in [ 'roc_auc' ]:
+                res[snam] = s(y_true, context['y_score'])
+            else:
+                res[snam] = s(y_true, context['y_pred'])
         context['scores'] = res
 
 

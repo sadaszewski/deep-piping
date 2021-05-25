@@ -3,9 +3,9 @@ class DeleteMe:
 
 
 def merge_objects(a, b):
-    if type(a) == dict:
-        if type(a) != type(b):
-            raise TypeError
+    if isinstance(a, dict):
+        if not isinstance(a, type(b)) and not isinstance(b, type(a)): # type(a) != type(b):
+            raise TypeError('%s != %s' % ( type(a), type(b) ))
         if '__delete__' in b and b['__delete__']:
             return DeleteMe
         if '__replace__' in b and b['__replace__']:

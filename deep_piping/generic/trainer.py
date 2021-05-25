@@ -1,10 +1,11 @@
 class GenericTrainer:
-    def __init__(self, dataset, label, logger, splitter, resampler):
+    def __init__(self, dataset, label, logger, splitter, resampler, n_classes=None):
         self.dataset = dataset
         self.label = label
         self.logger = logger
         self.splitter = splitter
         self.resampler = resampler
+        self.n_classes = n_classes
 
     def fit(self, model_factory):
         label = self.label
@@ -15,7 +16,7 @@ class GenericTrainer:
             model = model_factory()
 
             context = dict(logger=self.logger, loop_index=loop_index,
-                label=self.label)
+                label=self.label, n_classes=self.n_classes)
 
             train_data = self.dataset.iloc[train_index]
             test_data = self.dataset.iloc[test_index]
