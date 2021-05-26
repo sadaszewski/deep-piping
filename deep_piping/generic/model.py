@@ -8,7 +8,8 @@ class GenericModel:
     def train(self, train_data, context):
         context = dict(context)
         context.update(dict(ml_model=self.ml_model,
-            data=train_data, phase='train'))
+            data=train_data, phase='train',
+            y_true=train_data[self.label]))
         for st in self.train_steps:
             st(context)
         return context
@@ -16,7 +17,8 @@ class GenericModel:
     def test(self, test_data, context):
         context = dict(context)
         context.update(dict(ml_model=self.ml_model,
-            data=test_data, phase='test'))
+            data=test_data, phase='test',
+            y_true=test_data[self.label]))
         for st in self.test_steps:
             st(context)
         return context

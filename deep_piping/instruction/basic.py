@@ -1,14 +1,11 @@
 import sklearn.metrics
 import numpy as np
-
-
-class Instruction:
-    def __call__(self, *args, **kwargs):
-        raise NotImplementedError
+from .insn import Instruction
 
 
 class Fit(Instruction):
-    def __init__(self, fit_kwargs={}):
+    def __init__(self, fit_kwargs={}, **kwargs):
+        super().__init__(**kwargs)
         self.fit_kwargs = fit_kwargs
 
     def __call__(self, context):
@@ -16,6 +13,9 @@ class Fit(Instruction):
 
 
 class Predict(Instruction):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     def __call__(self, context):
         ml_model = context['ml_model']
         y_pred = ml_model.predict(context['data'])
@@ -29,11 +29,12 @@ class Predict(Instruction):
 
 
 class ComputeScores(Instruction):
-    def __init__(self, scores):
+    def __init__(self, scores, **kwargs):
+        super().__init__(**kwargs)
         self.scores = scores
 
     def __call__(self, context):
-        y_true = context['data'][context['label']]
+        y_true = context['y_true']
         res = {}
         for snam in self.scores:
             s = getattr(sklearn.metrics, snam + '_score')
@@ -45,6 +46,9 @@ class ComputeScores(Instruction):
 
 
 class LogScores(Instruction):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        
     def __call__(self, context):
         metrics = { context['phase'] + '_' + k: v \
             for k, v in context['scores'].items() }
