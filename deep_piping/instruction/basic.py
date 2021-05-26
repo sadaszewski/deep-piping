@@ -8,7 +8,7 @@ class Instruction:
 
 
 class Fit(Instruction):
-    def __init__(self, fit_kwargs):
+    def __init__(self, fit_kwargs={}):
         self.fit_kwargs = fit_kwargs
 
     def __call__(self, context):
