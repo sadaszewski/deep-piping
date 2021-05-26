@@ -2,8 +2,8 @@ import pytorch_lightning as plt
 
 
 class LitFlexibleModel(plt.LightningModule):
-    def __init__(self, dl_model, loaders, train_ins, val_ins, test_ins, optimizer, lr_scheduler=None):
-        super().__init__()
+    def __init__(self, dl_model, loaders, train_ins, val_ins, test_ins, optimizer, lr_scheduler=None, **kwargs):
+        super().__init__(**kwargs)
 
         self.dl_model = dl_model
         self.loaders = loaders

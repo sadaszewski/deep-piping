@@ -22,13 +22,13 @@ def autoimport(expr, names):
         mod = None
         while True:
             try:
-                print('Trying to load:', '.'.join(path), '...')
+                # print('Trying to load:', '.'.join(path), '...')
                 mod = importlib.import_module('.'.join(path))
                 if isinstance(n, ast.Name):
                     res[n.id] = mod
                     #names.append(n.id)
             except ModuleNotFoundError:
-                print('Failed')
+                # print('Failed')
                 break
             if not isinstance(n.parent, ast.Attribute):
                 break
