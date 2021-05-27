@@ -62,3 +62,30 @@ class Log(Instruction):
         prefix = (context['phase'] + '_') if self.use_phase_prefix else ''
         context['logger'].log_metrics({ (prefix + k): context[v] \
             for k, v in self.map_names.items() })
+
+
+class GetFromContext(Instruction):
+    def __init__(self, name, **kwargs):
+        super().__init__(**kwargs)
+        self.name = name
+
+    def __call__(self, context):
+        return context[self.name]
+
+
+class LogitsToPred(Instruction):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def __call__(self, context):
+        context['y_pred'] = context['logits'].argmax(dim=1)
+
+
+class ToCPU(Instruction):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def __call__(self, context):
+        context_cpu = { k: v.cpu() if isinstance(v, torch.Tensor) else v
+            for k, v in context.items() }
+        context.update(context_cpu)

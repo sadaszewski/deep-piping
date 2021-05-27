@@ -1,6 +1,8 @@
 import sklearn.metrics
 import numpy as np
 from .insn import Instruction
+import torch
+import inspect
 
 
 class Fit(Instruction):
@@ -29,28 +31,49 @@ class Predict(Instruction):
 
 
 class ComputeScores(Instruction):
-    def __init__(self, scores, **kwargs):
+    def __init__(self, scores, average='binary', **kwargs):
         super().__init__(**kwargs)
         self.scores = scores
+        self.average = average
 
     def __call__(self, context):
         y_true = context['y_true']
+        if isinstance(y_true, torch.Tensor):
+            y_true = y_true.cpu()
         res = {}
         for snam in self.scores:
             s = getattr(sklearn.metrics, snam + '_score')
+            def try_s(a, b):
+                try:
+                    return s(a, b, average=self.average)
+                except:
+                    pass
+                return s(a, b)
+            #argspec = inspect.getfullargspec(s)
+            #if 'average' in argspec[0] or argspec[2] is not None:
+            #    feed = dict(average=self.average)
             if snam in [ 'roc_auc' ]:
-                res[snam] = s(y_true, context['y_score'])
+                y_score = context['y_score']
+                if isinstance(y_score, torch.Tensor):
+                    y_score = y_score.cpu()
+                res[snam] = try_s(y_true, y_score)
             else:
-                res[snam] = s(y_true, context['y_pred'])
+                y_pred = context['y_pred']
+                if isinstance(y_pred, torch.Tensor):
+                    y_pred = y_pred.cpu()
+                res[snam] = try_s(y_true, y_pred)
         context['scores'] = res
 
 
 class LogScores(Instruction):
-    def __init__(self, **kwargs):
+    def __init__(self, log_to_stdout=False, **kwargs):
         super().__init__(**kwargs)
-        
+        self.log_to_stdout = log_to_stdout
+
     def __call__(self, context):
         metrics = { context['phase'] + '_' + k: v \
             for k, v in context['scores'].items() }
         context['logger'].log_metrics(metrics,
             step=context['loop_index'])
+        if self.log_to_stdout:
+            print(metrics)
