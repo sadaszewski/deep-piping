@@ -30,7 +30,7 @@ def create_object(objdef, container):
         type([ k for k in objdef.keys() if k == 'class' ][0]) == str:
         cls = resolve_class(objdef['class'])
         args = {}
-        kwargs = {}
+        kwargs = objdef.get('kwargs', {})
         for k, v in objdef.items():
             if k in [ 'class', '__factory__' ]:
                 continue
