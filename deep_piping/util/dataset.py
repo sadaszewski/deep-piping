@@ -1,6 +1,17 @@
 import torch
 
 
+class Datasets:
+    def train_dataset(self):
+        return self[0]
+
+    def val_dataset(self):
+        return self[1]
+
+    def test_dataset(self):
+        return self[2]
+
+
 class SplitDatasets(Datasets):
     def __init__(self, dataset, ratios=(.5, .25, .25), seed=0):
         super().__init__()
