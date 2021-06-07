@@ -2,7 +2,7 @@ import importlib
 from .create_object import create_object
 
 
-def materialize_config(config, args, verbose=False):
+def materialize_config(config, args, verbose=False, overrides={}):
     container = { 'args': args }
     if 'import' in config:
         for k, v in config['import'].items():
@@ -11,6 +11,9 @@ def materialize_config(config, args, verbose=False):
     for k, v in config.items():
         if verbose:
             print('Processing:', k, '...')
-        container[k] = create_object(v, container)
+        if k in overrides:
+            container[k] = overrides[k](container)
+        else:
+            container[k] = create_object(v, container)
 
     return container
