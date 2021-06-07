@@ -1,6 +1,7 @@
 import os
 import ruamel.yaml as yaml
 from .merge_objects import merge_objects
+from collections import OrderedDict
 
 
 def load_config(fname):
@@ -10,7 +11,7 @@ def load_config(fname):
     # config['path'] = os.path.abspath(fname)
 
     if 'base' in config:
-        res = {}
+        res = OrderedDict()
         base = config['base']
         if not isinstance(base, list):
             base = [ base ]
