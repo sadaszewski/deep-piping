@@ -41,8 +41,8 @@ dataset:
   
 opt:
   class: torch.optimizer.AdamW
-  parameters: dl_model.parameters()
-  learning_rate: args.learning_rate
+  0: dl_model.parameters()
+  lr: args.learning_rate
     
 model:
   class: deep_piping.lightning.LitFlexibleClassifier
