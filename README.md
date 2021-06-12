@@ -45,7 +45,7 @@ opt:
   learning_rate: args.learning_rate
     
 model:
-  class: deep_piping.lightning.LitFlexibleModel
+  class: deep_piping.lightning.LitFlexibleClassifier
   dl_model: dl_model
   dataset: dataset
   optimizer: opt
