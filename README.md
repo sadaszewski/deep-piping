@@ -1,7 +1,7 @@
 # deep-piping
-Inversion of Control (IoC) / Dependency Injection (DI) - (not only) for Deep Learning
+Inversion of Control ([IoC](https://en.wikipedia.org/wiki/Inversion_of_control)) / Dependency Injection ([DI](https://en.wikipedia.org/wiki/Dependency_injection)) - (not only) for Deep Learning
 
-Paraphrasing Wikipedia - in traditional programming, the custom code that expresses the purpose of the program calls into reusable libraries to take care of generic tasks. In IoC, custom-written portions of a computer program receive the flow of control from a generic framework.
+Paraphrasing Wikipedia - in traditional programming, the custom code that expresses the purpose of the program calls into reusable libraries to take care of generic tasks. In [IoC](https://en.wikipedia.org/wiki/Inversion_of_control), custom-written portions of a computer program receive the flow of control from a generic framework.
 
 In the context of Deep Learning (DL) the IoC approach can be illustrated by libraries such as [mmdetection](https://github.com/open-mmlab/mmdetection/blob/master/configs/_base_/models/faster_rcnn_r50_fpn.py) or [Detectron2](https://github.com/facebookresearch/detectron2/blob/master/configs/COCO-Detection/faster_rcnn_R_50_FPN_1x.yaml).
 
