@@ -13,7 +13,7 @@ The goal of _deep-piping_ is to provide an IoC/DI framework for DL independent o
   - dataset transformers
   - data access objects
 - automatic command line interface for all experiments
-- a well-defined and sensible multiple inheritance mechanism able to merge same keys
+- a well-defined and sensible multiple inheritance mechanism able to merge repeated keys
 
 The syntax supported by _deep-piping_ is a slightly abused YAML notation where [unquoted strings](https://yaml.org/spec/1.2/spec.html#style/flow/plain) are evaluated as Python expressions. On top of that, _deep-piping_ supports autoimporting of Python modules. These capacities combined allow for a clean and concise style demonstrated in the following example:
 
