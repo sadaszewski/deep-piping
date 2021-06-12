@@ -1,3 +1,8 @@
+#
+# Copyright (C) Stanislaw Adaszewski, 2021.
+# See LICENSE for terms.
+#
+
 class SklearnWrapper:
     def __init__(self, sk_model, label):
         self.sk_model = sk_model()

@@ -1,3 +1,8 @@
+#
+# Copyright (C) Stanislaw Adaszewski, 2021.
+# See LICENSE for terms.
+#
+
 class GenericTrainer:
     def __init__(self, dataset, label, logger, splitter, resampler=None, n_classes=None):
         self.dataset = dataset

@@ -1,3 +1,8 @@
+#
+# Copyright (C) Stanislaw Adaszewski, 2021.
+# See LICENSE for terms.
+#
+
 import os
 import ruamel.yaml as yaml
 from .merge_objects import merge_objects

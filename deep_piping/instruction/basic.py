@@ -1,3 +1,8 @@
+#
+# Copyright (C) Stanislaw Adaszewski, 2021.
+# See LICENSE for terms.
+#
+
 import sklearn.metrics
 import numpy as np
 from .insn import Instruction

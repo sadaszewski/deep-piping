@@ -1,3 +1,8 @@
+#
+# Copyright (C) Stanislaw Adaszewski, 2021.
+# See LICENSE for terms.
+#
+
 import random
 import arvados
 from functools import lru_cache
@@ -7,12 +12,12 @@ class ArvadosFastDownload:
     def __init__(self, api, num_retries=3, disable_services=[]):
         self.api = api
         self.num_retries = num_retries
-        
+
         keep_services = api.keep_services().list().execute()['items']
         keep_services = [ s for s in keep_services if s['service_type'] != 'proxy' ]
         keep_services = [ s for s in keep_services if s['service_host'] not in disable_services ]
         self.keep_services = keep_services
-        
+
     @lru_cache()
     def get_block(self, locator):
         for _ in range(self.num_retries):
@@ -30,7 +35,7 @@ class ArvadosFastDownload:
             except:
                 continue
         raise RuntimeError(f'Unable to download {locator}')
-        
+
     def get_file(self, f):
         data = []
         for seg in f.segments():

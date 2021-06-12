@@ -1,3 +1,8 @@
+#
+# Copyright (C) Stanislaw Adaszewski, 2021.
+# See LICENSE for terms.
+#
+
 class GenericModel:
     def __init__(self, ml_model, train_steps, test_steps, label):
         self.ml_model = ml_model()

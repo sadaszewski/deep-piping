@@ -1,3 +1,8 @@
+#
+# Copyright (C) Stanislaw Adaszewski, 2021.
+# See LICENSE for terms.
+#
+
 import ruamel.yaml as yaml
 from .autoimport import autoimport
 from .resolve_class import resolve_class

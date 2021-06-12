@@ -1,3 +1,8 @@
+#
+# Copyright (C) Stanislaw Adaszewski, 2021.
+# See LICENSE for terms.
+#
+
 def augment_parser(parser, config):
     for k, v in config.get('arguments', dict()).items():
         v = dict(v)
