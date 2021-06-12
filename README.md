@@ -69,4 +69,21 @@ Assuming that the above code is saved in a file named _example.yaml_, ideally it
 python ./script/train.py example.yaml --learning-rate 2e-5
 ```
 
+Then, if you wanted to create a derivative experiment, inserting an extra layer in _dl_model_ you could do as follows:
+
+```yaml
+base:
+  - ./example.yaml
+  
+dl_model:
+  2:
+    out_features: 32
+  3:
+    class: torch.nn.ReLU
+  4:
+    class: torch.nn.Linear
+    in_features: 32
+    out_features: 2
+```
+
 Although the [example/](https://github.com/sadaszewski/deep-piping/tree/master/example) section is still very much a work in progress, you can take a peek there to get a better idea about the capacities of the framework. Stay tuned for more news and training materials. Hope you find _deep-piping_ useful.
