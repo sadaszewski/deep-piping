@@ -12,7 +12,7 @@ The goal of _deep-piping_ is to provide an IoC/DI framework for DL independent o
   - flexible models and trainers
   - dataset transformers
   - data access objects
-- ability to use any existing Python class without any need to register it within the framework
+- ability to use any existing Python class without the need to register it within the framework
 - automatic command line interface for all experiments
 - a well-defined and sensible multiple inheritance mechanism able to merge repeated keys
 
