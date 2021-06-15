@@ -1,18 +1,20 @@
 # deep-piping
-Inversion of Control (IoC) / Dependency Injection (DI) - (not only) for Deep Learning
+Inversion of Control ([IoC](https://en.wikipedia.org/wiki/Inversion_of_control)) / Dependency Injection ([DI](https://en.wikipedia.org/wiki/Dependency_injection)) - (not only) for Deep Learning
 
-Paraphrasing Wikipedia - in traditional programming, the custom code that expresses the purpose of the program calls into reusable libraries to take care of generic tasks. In IoC, custom-written portions of a computer program receive the flow of control from a generic framework.
+Paraphrasing Wikipedia - in traditional programming, the custom code that expresses the purpose of the program calls into reusable libraries to take care of generic tasks. In [IoC](https://en.wikipedia.org/wiki/Inversion_of_control), custom-written portions of a computer program receive the flow of control from a generic framework.
 
 In the context of Deep Learning (DL) the IoC approach can be illustrated by libraries such as [mmdetection](https://github.com/open-mmlab/mmdetection/blob/master/configs/_base_/models/faster_rcnn_r50_fpn.py) or [Detectron2](https://github.com/facebookresearch/detectron2/blob/master/configs/COCO-Detection/faster_rcnn_R_50_FPN_1x.yaml).
 
-The goal of _deep-piping_ is to provide an IoC/DI framework for DL independent of a particular machine learning task or algorithm. To this end, _deep-piping_ focuses on:
+The goal of _deep-piping_ is to provide an IoC/DI framework for DL independent of a particular machine learning task or algorithm. To this end, _deep-piping_ focuses on providing:
 
-- providing the best possible syntax
-- providing useful primitives such as:
+- the best possible syntax
+- useful primitives such as:
   - flexible models and trainers
   - dataset transformers
   - data access objects
+- ability to use any existing Python class without the need to register it within the framework
 - automatic command line interface for all experiments
+- a well-defined and sensible multiple inheritance mechanism able to merge repeated keys
 
 The syntax supported by _deep-piping_ is a slightly abused YAML notation where [unquoted strings](https://yaml.org/spec/1.2/spec.html#style/flow/plain) are evaluated as Python expressions. On top of that, _deep-piping_ supports autoimporting of Python modules. These capacities combined allow for a clean and concise style demonstrated in the following example:
 
@@ -40,11 +42,11 @@ dataset:
   
 opt:
   class: torch.optimizer.AdamW
-  parameters: dl_model.parameters()
-  learning_rate: args.learning_rate
+  0: dl_model.parameters()
+  lr: args.learning_rate
     
 model:
-  class: deep_piping.lightning.LitFlexibleModel
+  class: deep_piping.lightning.LitFlexibleClassifier
   dl_model: dl_model
   dataset: dataset
   optimizer: opt
@@ -66,6 +68,23 @@ Assuming that the above code is saved in a file named _example.yaml_, ideally it
 
 ```bash
 python ./script/train.py example.yaml --learning-rate 2e-5
+```
+
+Then, if you wanted to create a derivative experiment, inserting an extra layer in _dl_model_ you could do as follows:
+
+```yaml
+base:
+  - ./example.yaml
+  
+dl_model:
+  2:
+    out_features: 32
+  3:
+    class: torch.nn.ReLU
+  4:
+    class: torch.nn.Linear
+    in_features: 32
+    out_features: 2
 ```
 
 Although the [example/](https://github.com/sadaszewski/deep-piping/tree/master/example) section is still very much a work in progress, you can take a peek there to get a better idea about the capacities of the framework. Stay tuned for more news and training materials. Hope you find _deep-piping_ useful.
