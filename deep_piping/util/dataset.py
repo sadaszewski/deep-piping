@@ -47,13 +47,16 @@ class SplitDatasets(Datasets):
 
 
 class DataLoaders:
-    def __init__(self, datasets, batch_size=32):
+    def __init__(self, datasets, batch_size=32, collate_fn=None, num_workers=1):
         self.datasets = datasets
         self.batch_size = batch_size
+        self.collate_fn = collate_fn
+        self.num_workers = num_workers
 
         self.loaders = [
             torch.utils.data.DataLoader(sub,
-                num_workers=1, batch_size=self.batch_size,
+                num_workers=self.num_workers, batch_size=self.batch_size,
+                collate_fn=collate_fn,
                 drop_last=False, shuffle=(i == 0)) \
                     for i, sub in enumerate(datasets)
         ]
