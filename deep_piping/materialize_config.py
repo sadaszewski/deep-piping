@@ -4,21 +4,19 @@
 #
 
 import importlib
-from .create_object import create_object
+from .create_object import CreateObjects
 
 
 def materialize_config(config, args, verbose=False, overrides={}):
-    container = { 'args': args }
-    if 'import' in config:
-        for k, v in config['import'].items():
-            container[k] = importlib.import_module(v)
-
-    for k, v in config.items():
+    create_objects = CreateObjects(config, args, verbose)
+    container = create_objects.execute()
+    
+    for k, v in overrides.items():
         if verbose:
-            print('Processing:', k, '...')
-        if k in overrides:
-            container[k] = overrides[k](container)
+            print('Overriding:', k, '...')
+        if callable(v):
+            container[k] = v(container)
         else:
-            container[k] = create_object(v, container)
+            container[k] = v
 
     return container
