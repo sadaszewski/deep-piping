@@ -89,7 +89,7 @@ class CreateObjects:
             return eval(objdef, globals(), container)
         elif isinstance(objdef, dict) and 'class' in objdef and \
             type([ k for k in objdef.keys() if k == 'class' ][0]) == str:
-            cls = resolve_class(objdef['class'])
+            cls = self.create_object(objdef['class'], container)
             args = {}
             kwargs = self.create_object(objdef.get('kwargs', {}), container)
             for k, v in objdef.items():

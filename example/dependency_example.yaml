@@ -9,6 +9,14 @@ second: # will be pulled in first despite being declared second
   1: 64
 
 
+cls: torch.nn.Linear
+
+cls_by_ref_example:
+  class: cls
+  0: 32
+  1: 64
+
+
 third: # will fail because of circular dep
   class: torch.nn.Sequential
   0: fourth
