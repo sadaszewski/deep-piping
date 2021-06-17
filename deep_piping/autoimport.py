@@ -5,10 +5,11 @@
 
 import ast
 import importlib
+import types
 
 
 def autoimport(expr, names):
-    names = list(names)
+    # names = list(names)
     try:
         t = ast.parse(expr)
     except SyntaxError:
@@ -16,12 +17,15 @@ def autoimport(expr, names):
     res = {}
     assert len(t.body) == 1
     for n in ast.walk(t):
+        n.is_parent = False
+    for n in ast.walk(t):
         for ch in ast.iter_child_nodes(n):
             ch.parent = n
+            n.is_parent = True
     for n in ast.walk(t):
         if not isinstance(n, ast.Name):
             continue
-        if n.id in names:
+        if n.id in names and not isinstance(names[n.id], types.ModuleType):
             continue
         path = [ n.id ]
         mod = None

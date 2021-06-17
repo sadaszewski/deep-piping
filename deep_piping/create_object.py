@@ -78,12 +78,14 @@ class CreateObjects:
             yaml.scalarstring.FoldedScalarString ]:
             return str(objdef)
         elif type(objdef) == str:
-            names = dir(__builtins__) + list(globals().keys()) + list(container.keys())
+            names = dict(__builtins__)
+            names.update(globals())
+            names.update(container)
+            # print('names:', type(names))
             if is_identifier(objdef) and objdef not in names and objdef in self.config.keys():
                 if self.verbose:
                     print(f'Unknown identifier {objdef}, trying to create dependency from config...')
-                container[objdef] = self.create_top_level_object(objdef, self.config[objdef], container)
-                names.append(objdef)
+                names[objdef] = container[objdef] = self.create_top_level_object(objdef, self.config[objdef], container)
             imp, _ = autoimport(objdef, names)
             container.update(imp)
             return eval(objdef, globals(), container)
