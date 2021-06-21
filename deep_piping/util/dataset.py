@@ -78,11 +78,12 @@ class DataLoaders:
 
     
 class ImageTransformDataset(torch.utils.data.Dataset):
-    def __init__(self, dataset, transforms):
+    def __init__(self, dataset, transforms, n_images=1):
         super().__init__()
         
         self.dataset = dataset
         self.transforms = transforms
+        self.n_images = n_images
         
     def __len__(self):
         return len(self.dataset)
@@ -91,11 +92,13 @@ class ImageTransformDataset(torch.utils.data.Dataset):
         if index < 0 or index > len(self):
             raise IndexError
         
-        im, *tail = self.dataset[index]
+        tail = self.dataset[index]
+        images, *tail = tail[:self.n_images], tail[self.n_images:]
         for t in self.transforms:
-            im = t(im)
+            for i, im in enumerate(images):
+                images[i] = t(im)
             
-        return im, *tail
+        return *images, *tail
 
     
 class CachedDataset(torch.utils.data.Dataset):
