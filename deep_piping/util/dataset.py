@@ -94,9 +94,11 @@ class ImageTransformDataset(torch.utils.data.Dataset):
         
         tail = self.dataset[index]
         images, *tail = tail[:self.n_images], tail[self.n_images:]
-        for t in self.transforms:
-            for i, im in enumerate(images):
-                images[i] = t(im)
+        
+        for i, im in enumerate(images):
+            for t in self.transforms:
+                im = t(im)
+            images[i] = im
             
         return *images, *tail
 
