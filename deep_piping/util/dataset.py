@@ -93,7 +93,8 @@ class ImageTransformDataset(torch.utils.data.Dataset):
             raise IndexError
         
         tail = self.dataset[index]
-        images, *tail = tail[:self.n_images], tail[self.n_images:]
+        images, tail = tail[:self.n_images], tail[self.n_images:]
+        images = list(images)
         
         for i, im in enumerate(images):
             for t in self.transforms:
